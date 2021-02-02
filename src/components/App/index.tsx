@@ -1,10 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { TeamsList, LoginPage, StudentsTable } from 'modules';
+import { TeamsList, LoginPage, StudentsTable, CallBack } from 'modules';
 import { PrivateRoute, Loader } from 'components';
 import { selectToken } from 'modules/LoginPage/selectors';
 import { AUTH_TOKEN, SET_TOKEN } from 'appConstants';
+
+const setLogged = (m: any) => console.log(m);
+const setGithubId = (m: any) => console.log(m);
 
 export const App: FC = () => {
   const dispatch = useDispatch();
@@ -38,6 +41,17 @@ export const App: FC = () => {
         component={StudentsTable}
       />
       <Route exact path="/login" component={LoginPage} />
+      <Route
+        exact
+        path="/callback"
+        render={(props) => (
+          <CallBack
+            props={props}
+            setLogged={setLogged}
+            setGithubId={setGithubId}
+          />
+        )}
+      />
     </Switch>
   );
 };
