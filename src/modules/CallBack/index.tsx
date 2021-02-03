@@ -32,37 +32,26 @@ async function getGitUser(token: Promise<string> | null) {
 
 type TGitAuth = {
   props: any;
-  setLogged: (lstate: boolean) => void;
   setGithubId: (githubId: string) => void;
 };
 
-export const CallBack: React.FC<TGitAuth> = ({
-  props,
-  setLogged,
-  setGithubId,
-}) => {
+export const CallBack: React.FC<TGitAuth> = ({ props, setGithubId }) => {
   const {
     location: { search },
   } = props;
 
   const url = new URLSearchParams(search);
   const code = url.get('code');
-  // let token: Promise<string> | null = null; //'not ready';
-  console.log('url=', url, '50code=', code);
+
   if (code) {
     getAccessToken(code) // state
       .then((response) => (response ? response.json() : null))
-      .then((data) => {
-        // token = data?.token;
-        return getGitUser(data?.token);
-      })
+      .then((data) => getGitUser(data?.token))
       .then((response) => (response ? response.json() : null))
       .then((data) => {
         console.log('2then', data);
-        const { login } = data;
+        const { login } = data; // login from github
         setGithubId(login);
-        setLogged(true);
-        // setCookie('login', login);
       })
       .catch((data) => console.log('catch', data));
   }

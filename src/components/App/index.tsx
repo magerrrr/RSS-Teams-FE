@@ -5,9 +5,7 @@ import { TeamsList, LoginPage, StudentsTable, CallBack } from 'modules';
 import { PrivateRoute, Loader } from 'components';
 import { selectToken } from 'modules/LoginPage/selectors';
 import { AUTH_TOKEN, SET_TOKEN } from 'appConstants';
-
-const setLogged = (m: any) => console.log(m);
-const setGithubId = (m: any) => console.log(m);
+import { getCookie, setGithubId } from 'service/cookies';
 
 export const App: FC = () => {
   const dispatch = useDispatch();
@@ -15,7 +13,9 @@ export const App: FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loginToken = localStorage.getItem(AUTH_TOKEN);
+    const loginToken = getCookie(AUTH_TOKEN);
+    console.log(loginToken);
+    // const loginToken = localStorage.getItem(AUTH_TOKEN);
     dispatch({ type: SET_TOKEN, payload: loginToken });
     setLoading(false);
   }, [dispatch]);
@@ -44,13 +44,7 @@ export const App: FC = () => {
       <Route
         exact
         path="/callback"
-        render={(props) => (
-          <CallBack
-            props={props}
-            setLogged={setLogged}
-            setGithubId={setGithubId}
-          />
-        )}
+        render={(props) => <CallBack props={props} setGithubId={setGithubId} />}
       />
     </Switch>
   );
